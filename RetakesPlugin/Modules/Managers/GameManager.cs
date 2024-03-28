@@ -1,6 +1,9 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Core.Capabilities;
 using CounterStrikeSharp.API.Modules.Utils;
+using RetakesPluginShared;
+using RetakesPluginShared.Events;
 
 namespace RetakesPlugin.Modules.Managers;
 
@@ -15,6 +18,8 @@ public class GameManager
     public const int ScoreForKill = 50;
     public const int ScoreForAssist = 25;
     public const int ScoreForDefuse = 50;
+
+    public static PluginCapability<IRetakesPluginEventSender> RetakesPluginEventSenderCapability { get; } = new("retakes_plugin:event_sender");
 
     public GameManager(Translator translator, QueueManager queueManager, int? roundsToScramble, bool? isScrambleEnabled)
     {
@@ -41,6 +46,8 @@ public class GameManager
         var newCounterTerrorists = shuffledActivePlayers.Except(newTerrorists).ToList();
 
         SetTeams(newTerrorists, newCounterTerrorists);
+
+        RetakesPluginEventSenderCapability.Get()?.TriggerEvent(new TeamScrambleEvent());
     }
 
     public void ResetPlayerScores()

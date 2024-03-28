@@ -1,3 +1,6 @@
 ﻿# Rider IDE
 /.idea
 *.DotSettings.user
+
+# Visual Studio
+.vs
